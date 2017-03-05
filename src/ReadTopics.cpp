@@ -18,12 +18,9 @@ double ReadTopics::lambda = 0.0;
 // to calculate the probabilities of a word given a document
 double ReadTopics::calcProb(string word, size_t docId)
 {
-	//std::cout << "calculating Probability... " << std::endl;
 	double probWordDoc = 0;
 
 	string documentName = documentIdName[docId];
-	std::cout << "document ID = " << docId << std::endl;
-	std::cout << "documentName = " << documentName << std::endl;
 
 	map< string, map <string, double> >::iterator itFoundDoc = docsTopics.find(documentName); // find topics of a document
 	map <string, double> oneDocsTopics = itFoundDoc->second;
@@ -31,8 +28,6 @@ double ReadTopics::calcProb(string word, size_t docId)
 	{
 		string topicName = itTopics->first;
 		double probDocTopic = itTopics->second;
-		std::cout << "\ttopicName = " << topicName << std::endl;;
-		std::cout << "\tprobDocTopic = " << probDocTopic << std::endl;
 		map< string, map <string, double> >::iterator itFoundWords = topicsWords.find(topicName); // find word in that topic
 		map <string, double> oneTopicWords = itFoundWords->second;
 
@@ -42,25 +37,13 @@ double ReadTopics::calcProb(string word, size_t docId)
 		{
 			double probTopicWord = itFoundWord->second;
 			probWordDoc += probTopicWord * probDocTopic;
-
-			std::cout << "\t\twordName = " << itFoundWord->first << std::endl;;
-			std::cout << "\t\tprobTopicWord = " << probTopicWord << std::endl;;
-			std::cout << "\t\tprobWordDoc = " << probWordDoc << std::endl;
 		}
 	}
-	std::cout << "probability calculated... probWordDoc = " << probWordDoc << std::endl;
 	return probWordDoc;
 }
 void ReadTopics::readDocsTopics(string fileName) 
 {
 	docsTopics = readFile(fileName);
-	//for(map< string, map <string, double> >::iterator it = docsTopics.begin(); it != docsTopics.end(); it++ )
-	//{
-	//	cout << "document ID = " << it->first << endl;
-	//	for(map <string, double>::iterator it2 = (it->second).begin(); it2 != (it->second).end(); it2++)
-	//		cout << "topic ID = " << it2->first << " prob = " << it2->second << endl;
-	//}
-
 	std::cout << "size of docsTopics = " << docsTopics.size() << std::endl;
 }
 void ReadTopics::readTopicsWords(string fileName) 
@@ -71,8 +54,6 @@ void ReadTopics::readTopicsWords(string fileName)
 
 map< string, map <string, double> > ReadTopics::readFile(string fileName)
 {
-	std::cout << "reading topic files..." << std::endl;
-	std::cout << "file Name = " << fileName << std::endl;
 	map< string, map <string, double> > topicsMap; 
 	ifstream file(fileName.c_str());
 	if(!file.good())
@@ -83,7 +64,6 @@ map< string, map <string, double> > ReadTopics::readFile(string fileName)
 	double twoColumn2 = 0.0;
 	while(getline(file, line))
 	{
-		//cout << "line = " << line << endl;
 		std::vector<std::string> strs;
 		boost::split(strs, line, boost::is_any_of("\t "));
 		if(strs.size() == 1) // if there is only one column in the line
@@ -99,7 +79,6 @@ map< string, map <string, double> > ReadTopics::readFile(string fileName)
 		{
 			throw runtime_error("there should be at most 2 columns per row in lda graph files");
 		}
-		//cout << "oneColumn = " << oneColumn << " twoColumn1 = " << twoColumn1 << " twoColumn2 = " << twoColumn2 << endl;
 		if(oneColumn != "" && twoColumn1 != "")
 			topicsMap[oneColumn].insert(make_pair(twoColumn1, twoColumn2));		
 	}
@@ -122,8 +101,6 @@ void ReadTopics::genMapdocumentIdName(string repName)
 	}
 	r.close();
 	env.close();
-
-	//std::cout << "size of documentIdName = " << documentIdName.size() << std::endl;
 }
 
 double ReadTopics::getLambda()
