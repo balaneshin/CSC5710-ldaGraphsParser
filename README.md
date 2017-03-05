@@ -1,5 +1,6 @@
 # CSC5710-ldaGraphsParser
 
+## Course:
 Fall 2015 - CSC 5710 - Design of Intelligent Information Retrieval Systems
 
 ## TA Note:
